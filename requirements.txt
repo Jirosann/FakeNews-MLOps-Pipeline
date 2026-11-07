@@ -1,5 +1,5 @@
 flask==3.1.2
 scikit-learn==1.8.0
 pandas==2.3.3
-nltk==3.9.2
+nltk==3.10.4
 gunicorn==23.0.0 # server standar industri untuk menjalankan Flask di dalam Docker agar lebih stabil daripada app.run().
