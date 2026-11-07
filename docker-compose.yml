@@ -1,0 +1,12 @@
+services:
+  fake-news-app:
+    build: .
+    ports:
+      # Hanya bisa diakses dari komputer sendiri (localhost)
+      - "127.0.0.1:5000:5000"
+    restart: always
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true

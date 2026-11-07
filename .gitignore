@@ -1,0 +1,27 @@
+# Abaikan dataset yang berat
+*.csv
+
+# Abaikan environment & cache
+env_ml/
+venv/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+
+# Abaikan file rahasia (jangan pernah di-commit)
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+
+# Abaikan database & log lokal
+*.db
+*.sqlite3
+*.log
+
+# Abaikan file model lama
+*.pkl.bak

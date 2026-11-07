@@ -1,0 +1,13 @@
+env_ml/
+venv/
+.venv/
+Jupyter/
+__pycache__/
+*.csv
+.git
+.gitignore
+.env
+.env.*
+*.pem
+*.key
+Readme.md
