@@ -27,11 +27,48 @@ except LookupError:
     stop_words = set(stopwords.words('english'))
 
 
+WORD_RE = re.compile(r'\w+')
+DIGIT_RE = re.compile(r'\d')
+PUNCT_RE = re.compile('[%s]' % re.escape(string.punctuation))
+
+
+def remove_bracketed(text):
+    """Menghapus teks dalam kurung kotak, misal "[VIDEO]".
+
+    Hasilnya sama dengan re.sub(r'\\[.*?\\]', '', text), tetapi berjalan
+    dalam waktu linear sehingga aman dari serangan ReDoS (input "[[[[...").
+    """
+    lines = []
+    for line in text.split('\n'):
+        parts, pos = [], 0
+        while True:
+            start = line.find('[', pos)
+            if start == -1:
+                break
+            end = line.find(']', start + 1)
+            if end == -1:
+                break
+            parts.append(line[pos:start])
+            pos = end + 1
+        parts.append(line[pos:])
+        lines.append(''.join(parts))
+    return '\n'.join(lines)
+
+
+def remove_words_with_digits(text):
+    """Menghapus kata yang mengandung angka, misal "covid19".
+
+    Hasilnya sama dengan re.sub(r'\\w*\\d\\w*', '', text), tetapi tanpa
+    backtracking sehingga aman dari serangan ReDoS (input "aaaa...").
+    """
+    return WORD_RE.sub(lambda m: '' if DIGIT_RE.search(m.group()) else m.group(), text)
+
+
 def clean_text(text):
     text = text.lower()
-    text = re.sub(r'\[.*?\]', '', text)  # Menghapus teks dalam kurung kotak
-    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)  # Menghapus tanda baca
-    text = re.sub(r'\w*\d\w*', '', text)  # Menghapus angka
+    text = remove_bracketed(text)  # Menghapus teks dalam kurung kotak
+    text = PUNCT_RE.sub('', text)  # Menghapus tanda baca
+    text = remove_words_with_digits(text)  # Menghapus angka
 
     # Deteksi Stopwords
     text = " ".join([word for word in text.split() if word not in stop_words])
